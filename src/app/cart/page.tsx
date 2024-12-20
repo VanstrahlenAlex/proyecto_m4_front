@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useCart } from '@/contexts/CartContext'
@@ -9,6 +10,7 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
+import Image from 'next/image'
 
 export default function Cart() {
   const { items, removeFromCart, clearCart, total } = useCart()
@@ -95,7 +97,7 @@ const createOrderMutation = useMutation({
             {items.map((item) => (
               <div key={item.id} className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
                 <div className="w-24 h-24 bg-gray-200 rounded">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover rounded" />
+                  <Image src={item.image} alt={item.name} width={100} height={100} className="w-full h-full object-cover rounded" />
                 </div>
                 <div className="flex-grow">
                   <h3 className="font-semibold">{item.name}</h3>
