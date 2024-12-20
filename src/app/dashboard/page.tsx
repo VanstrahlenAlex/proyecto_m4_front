@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { I_Orders } from '@/interfaces/Orders.interface'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 interface Purchase {
   id: number
@@ -13,8 +14,17 @@ interface Purchase {
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth() 
-	const token = localStorage.getItem('token')
+  const { user } = useAuth()
+  const [token, setToken] = useState<string | null>(null)
+
+  // Asegurarse de obtener el token solo en el cliente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('token')
+      setToken(storedToken)
+    }
+  }, [])
+
   const { data: purchases, isLoading, error } = useQuery<Purchase[]>({
     queryKey: ['purchases'],
     queryFn: () =>
@@ -35,7 +45,7 @@ export default function DashboardPage() {
             })),
           }))
         ),
-    enabled: !!user && !!token, 
+    enabled: !!user && !!token, // Solo se ejecuta si user y token existen
   })
 
   if (!user) return <div>Por favor, inicia sesión para ver esta página.</div>
